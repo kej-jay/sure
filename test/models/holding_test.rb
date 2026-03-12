@@ -62,6 +62,23 @@ class HoldingTest < ActiveSupport::TestCase
     assert_equal Money.new(expected_nvda_usd, "CAD").exchange_to("USD", fallback_rate: 1), @nvda.avg_cost
   end
 
+  test "calculates average cost basis including fees" do
+    # Create trades with fees: fee is added to the cost basis
+    trade1 = create_trade(@amzn.security, account: @account, qty: 10, price: 212.00, date: 1.day.ago.to_date)
+    trade1.entryable.update!(fee: BigDecimal("10.00"), fee_currency: "USD")
+
+    trade2 = create_trade(@amzn.security, account: @account, qty: 15, price: 216.00, date: Date.current)
+    trade2.entryable.update!(fee: BigDecimal("5.00"), fee_currency: "USD")
+
+    # expected weighted avg cost = sum(price * qty + fee) / sum(qty)
+    amzn_total = BigDecimal("10") * BigDecimal("212.00") + BigDecimal("10.00") +
+                 BigDecimal("15") * BigDecimal("216.00") + BigDecimal("5.00")
+    amzn_qty   = BigDecimal("10") + BigDecimal("15")
+    expected_amzn = amzn_total / amzn_qty
+
+    assert_equal Money.new(expected_amzn), @amzn.avg_cost
+  end
+
   test "calculates total return trend" do
     @amzn.stubs(:avg_cost).returns(Money.new(214.00))
     @nvda.stubs(:avg_cost).returns(Money.new(126.00))

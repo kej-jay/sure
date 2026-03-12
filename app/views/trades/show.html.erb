@@ -42,6 +42,20 @@
                   step: "any",
                   precision: 10,
                   disabled: @entry.linked? %>
+            <%= ef.money_field :fee,
+                  label: t(".fee_label"),
+                  disable_currency: true,
+                  auto_submit: true,
+                  min: 0,
+                  step: "any",
+                  disabled: @entry.linked? %>
+            <%= ef.money_field :tax,
+                  label: t(".tax_label"),
+                  disable_currency: true,
+                  auto_submit: true,
+                  min: 0,
+                  step: "any",
+                  disabled: @entry.linked? %>
           <% end %>
         <% end %>
       </div>

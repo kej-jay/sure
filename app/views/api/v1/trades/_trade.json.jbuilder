@@ -9,6 +9,10 @@ json.notes trade.entry.notes
 json.qty trade.qty
 json.price trade.price_money.format
 json.investment_activity_label trade.investment_activity_label
+json.fee trade.fee_money&.format
+json.fee_currency trade.fee_currency
+json.tax trade.tax_money&.format
+json.tax_currency trade.tax_currency
 
 json.account do
   json.id trade.entry.account.id

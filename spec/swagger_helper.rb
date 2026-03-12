@@ -446,6 +446,10 @@ RSpec.configure do |config|
               qty: { type: :string },
               price: { type: :string },
               investment_activity_label: { type: :string, nullable: true },
+              fee: { type: :string, nullable: true, description: 'Transaction fee amount' },
+              fee_currency: { type: :string, nullable: true, description: 'Currency of the transaction fee' },
+              tax: { type: :string, nullable: true, description: 'Tax amount withheld or paid on this trade' },
+              tax_currency: { type: :string, nullable: true, description: 'Currency of the tax amount' },
               account: { '$ref' => '#/components/schemas/Account' },
               security: {
                 type: :object,

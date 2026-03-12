@@ -5,10 +5,12 @@ en:
       account: Transfer account (optional)
       account_prompt: Search account
       amount: Amount
+      fee: Transaction fee (optional)
       holding: Ticker symbol
       price: Price per share
       qty: Quantity
       submit: Add transaction
+      tax: Tax (optional)
       ticker_placeholder: AAPL
       type: Type
     header:
@@ -34,10 +36,12 @@ en:
       details: Details
       exclude_subtitle: This trade will not be included in reports and calculations
       exclude_title: Exclude from analytics
+      fee_label: Transaction Fee
       no_category: No category
       note_label: Note
       note_placeholder: Add any additional notes here...
       quantity_label: Quantity
       sell: Sell
       settings: Settings
+      tax_label: Tax
       type_label: Type

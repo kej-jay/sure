@@ -2,7 +2,8 @@ class Trade::CreateForm
   include ActiveModel::Model
 
   attr_accessor :account, :date, :amount, :currency, :qty,
-                :price, :ticker, :manual_ticker, :type, :transfer_account_id
+                :price, :ticker, :manual_ticker, :type, :transfer_account_id,
+                :fee, :fee_currency, :tax, :tax_currency
 
   # Either creates a trade, transaction, or transfer based on type
   # Returns the model, regardless of success or failure
@@ -42,7 +43,11 @@ class Trade::CreateForm
           price: price,
           currency: currency,
           security: security,
-          investment_activity_label: type.capitalize # "buy" → "Buy", "sell" → "Sell"
+          investment_activity_label: type.capitalize, # "buy" → "Buy", "sell" → "Sell"
+          fee: fee.presence,
+          fee_currency: fee_currency.presence || (fee.present? ? currency : nil),
+          tax: tax.presence,
+          tax_currency: tax_currency.presence || (tax.present? ? currency : nil)
         )
       )
 
