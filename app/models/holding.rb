@@ -268,6 +268,7 @@ class Holding < ApplicationRecord
     end
 
     # Calculates weighted average cost from buy trades.
+    # Fees are included in the cost basis (i.e. what it actually cost to acquire each share).
     # Returns nil if no trades exist (cost basis is unknown).
     def calculate_avg_cost
       trades = account.trades
@@ -283,7 +284,7 @@ class Holding < ApplicationRecord
         .where("trades.qty > 0 AND entries.date <= ?", date)
 
       total_cost, total_qty = trades.pick(
-        Arel.sql("SUM(trades.price * trades.qty * COALESCE(exchange_rates.rate, 1))"),
+        Arel.sql("SUM((trades.price * trades.qty + COALESCE(trades.fee, 0)) * COALESCE(exchange_rates.rate, 1))"),
         Arel.sql("SUM(trades.qty)")
       )
 

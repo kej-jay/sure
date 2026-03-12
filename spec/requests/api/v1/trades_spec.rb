@@ -168,7 +168,11 @@ RSpec.describe 'API V1 Trades', type: :request do
               manual_ticker: { type: :string, description: 'Manual ticker for offline securities' },
               currency: { type: :string, description: 'Currency (defaults to account currency)' },
               investment_activity_label: { type: :string, description: 'Activity label (e.g. Buy, Sell)' },
-              category_id: { type: :string, format: :uuid, description: 'Category ID' }
+              category_id: { type: :string, format: :uuid, description: 'Category ID' },
+              fee: { type: :number, description: 'Transaction fee amount (optional)' },
+              fee_currency: { type: :string, description: 'Currency of the transaction fee (defaults to trade currency)' },
+              tax: { type: :number, description: 'Tax amount on this trade (optional)' },
+              tax_currency: { type: :string, description: 'Currency of the tax amount (defaults to trade currency)' }
             },
             required: %w[account_id date qty price type]
           }
@@ -335,7 +339,11 @@ RSpec.describe 'API V1 Trades', type: :request do
               notes: { type: :string },
               currency: { type: :string },
               investment_activity_label: { type: :string },
-              category_id: { type: :string, format: :uuid }
+              category_id: { type: :string, format: :uuid },
+              fee: { type: :number, description: 'Transaction fee amount (optional)' },
+              fee_currency: { type: :string, description: 'Currency of the transaction fee' },
+              tax: { type: :number, description: 'Tax amount on this trade (optional)' },
+              tax_currency: { type: :string, description: 'Currency of the tax amount' }
             }
           }
         }

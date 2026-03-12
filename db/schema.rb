@@ -1397,6 +1397,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_08_113006) do
     t.string "realized_gain_confidence"
     t.string "realized_gain_currency"
     t.string "investment_activity_label"
+    t.decimal "fee", precision: 19, scale: 4
+    t.string "fee_currency"
+    t.decimal "tax", precision: 19, scale: 4
+    t.string "tax_currency"
     t.index ["investment_activity_label"], name: "index_trades_on_investment_activity_label"
     t.index ["realized_gain"], name: "index_trades_on_realized_gain_not_null", where: "(realized_gain IS NOT NULL)"
     t.index ["security_id"], name: "index_trades_on_security_id"

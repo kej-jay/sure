@@ -146,14 +146,16 @@ class Api::V1::TradesController < Api::V1::BaseController
     def trade_params
       params.require(:trade).permit(
         :account_id, :date, :qty, :price, :currency,
-        :security_id, :ticker, :manual_ticker, :investment_activity_label, :category_id
+        :security_id, :ticker, :manual_ticker, :investment_activity_label, :category_id,
+        :fee, :fee_currency, :tax, :tax_currency
       )
     end
 
     def trade_update_params
       params.require(:trade).permit(
         :name, :date, :amount, :currency, :notes, :nature, :type,
-        :qty, :price, :investment_activity_label, :category_id
+        :qty, :price, :investment_activity_label, :category_id,
+        :fee, :fee_currency, :tax, :tax_currency
       )
     end
 
@@ -169,7 +171,11 @@ class Api::V1::TradesController < Api::V1::BaseController
         entryable_attributes: {
           id: @trade.id,
           investment_activity_label: flat[:investment_activity_label],
-          category_id: flat[:category_id]
+          category_id: flat[:category_id],
+          fee: flat[:fee],
+          fee_currency: flat[:fee_currency],
+          tax: flat[:tax],
+          tax_currency: flat[:tax_currency]
         }.compact_blank
       }.compact
 
@@ -248,7 +254,11 @@ class Api::V1::TradesController < Api::V1::BaseController
         currency: trade_params[:currency].presence || account.currency,
         type: type,
         ticker: ticker_value,
-        manual_ticker: manual_ticker_value
+        manual_ticker: manual_ticker_value,
+        fee: trade_params[:fee].presence,
+        fee_currency: trade_params[:fee_currency].presence,
+        tax: trade_params[:tax].presence,
+        tax_currency: trade_params[:tax_currency].presence
       }.compact
     end
 

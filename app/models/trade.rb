@@ -12,6 +12,8 @@ class Trade < ApplicationRecord
   validates :qty, presence: true
   validates :price, :currency, presence: true
   validates :investment_activity_label, inclusion: { in: ACTIVITY_LABELS }, allow_nil: true
+  validates :fee, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :tax, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   # Trade types for categorization
   def buy?
@@ -20,6 +22,16 @@ class Trade < ApplicationRecord
 
   def sell?
     qty.negative?
+  end
+
+  def fee_money
+    return nil if fee.nil?
+    Money.new(fee, fee_currency.presence || currency)
+  end
+
+  def tax_money
+    return nil if tax.nil?
+    Money.new(tax, tax_currency.presence || currency)
   end
 
   class << self
@@ -35,7 +47,9 @@ class Trade < ApplicationRecord
     return nil if current_price.nil?
 
     current_value = current_price * qty.abs
+    # Include fees in cost basis: what you paid per share × qty + fees
     cost_basis = price_money * qty.abs
+    cost_basis += fee_money.exchange_to(currency, fallback_rate: 1) if fee_money
 
     Trend.new(current: current_value, previous: cost_basis)
   end
@@ -78,7 +92,10 @@ class Trade < ApplicationRecord
       return nil unless holding&.avg_cost
 
       cost_basis = holding.avg_cost * qty.abs
+      # Net sale proceeds: subtract fees and taxes from what you received
       sale_proceeds = price_money * qty.abs
+      sale_proceeds -= fee_money.exchange_to(currency, fallback_rate: 1) if fee_money
+      sale_proceeds -= tax_money.exchange_to(currency, fallback_rate: 1) if tax_money
 
       Trend.new(current: sale_proceeds, previous: cost_basis)
     end
